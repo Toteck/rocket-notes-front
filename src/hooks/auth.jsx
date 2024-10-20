@@ -7,6 +7,14 @@ export const AuthContext = createContext({});
 // Criação do provedor do contexto
 function AuthProvider({ children }) {
   const [data, setData] = useState({});
+
+  function signOut() {
+    localStorage.removeItem("@rocketnotes:user");
+    localStorage.removeItem("@rocketnotes:token");
+
+    setData({});
+  }
+
   async function signIn({ email, password }) {
     try {
       const response = await api.post("/sessions", { email, password });
@@ -43,7 +51,7 @@ function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, user: data.user }}>
+    <AuthContext.Provider value={{ signIn, user: data.user, signOut }}>
       {children}
     </AuthContext.Provider>
   );
