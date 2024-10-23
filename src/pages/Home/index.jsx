@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
 
 import { FiPlus, FiSearch } from "react-icons/fi";
@@ -17,9 +17,11 @@ export function Home() {
   const [search, setSearch] = useState("");
   const [notes, setNotes] = useState([]);
 
+  const navigate = useNavigate();
+
   function handleTagSelected(tagName) {
     if (tagName === "all") {
-      return setTagsSelected([])
+      return setTagsSelected([]);
     }
     const alreadySelected = tagsSelected.includes(tagName);
     if (alreadySelected) {
@@ -28,6 +30,10 @@ export function Home() {
     } else {
       setTagsSelected((prevState) => [...prevState, tagName]);
     }
+  }
+
+  function handleDetails(noteId) {
+    navigate(`/details/:${noteId}`);
   }
 
   useEffect(() => {
@@ -40,7 +46,6 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-
     async function fetchNotes() {
       const response = await api.get(
         `/notes?title=${search}&tags=${tagsSelected}`
@@ -85,7 +90,11 @@ export function Home() {
       <Content>
         <Section title={"Minhas notas"}>
           {notes.map((note) => (
-            <Note key={note.id} data={note} />
+            <Note
+              key={note.id}
+              data={note}
+              onClick={() => handleDetails(note.id)}
+            />
           ))}
         </Section>
       </Content>
