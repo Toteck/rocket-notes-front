@@ -18,6 +18,9 @@ export function Home() {
   const [notes, setNotes] = useState([]);
 
   function handleTagSelected(tagName) {
+    if (tagName === "all") {
+      return setTagsSelected([])
+    }
     const alreadySelected = tagsSelected.includes(tagName);
     if (alreadySelected) {
       const filteredTags = tagsSelected.filter((tag) => tag !== tagName);
@@ -37,6 +40,7 @@ export function Home() {
   }, []);
 
   useEffect(() => {
+
     async function fetchNotes() {
       const response = await api.get(
         `/notes?title=${search}&tags=${tagsSelected}`
